@@ -1,79 +1,72 @@
-# Getting started with Quarkus
+# Quarkus 시작하기
 
-This is a minimal CRUD service exposing a couple of endpoints over REST.
+이 프로젝트는 REST 엔드포인트를 노출하는 최소한의 CRUD 서비스 예제입니다.
 
-Under the hood, this demo uses:
+이 데모는 다음 기술을 사용합니다:
 
-- RESTEasy to expose the REST endpoints
-- REST-assured and JUnit 5 for endpoint testing
+- REST 엔드포인트 노출을 위한 RESTEasy
+- 엔드포인트 테스트를 위한 REST-assured 및 JUnit 5
 
-## Requirements
+## 요구 사항
 
-To compile and run this demo you will need:
+이 데모를 컴파일하고 실행하려면 다음이 필요합니다:
 
-- JDK 17+
+- JDK 17 이상
 - GraalVM
 
-### Configuring GraalVM and JDK 17+
+### GraalVM 및 JDK 17+ 설정
 
-Make sure that both the `GRAALVM_HOME` and `JAVA_HOME` environment variables have
-been set, and that a JDK 17+ `java` command is on the path.
+`GRAALVM_HOME`과 `JAVA_HOME` 환경 변수가 모두 설정되어 있고,
+JDK 17 이상의 `java` 명령어가 PATH에 포함되어 있는지 확인하세요.
 
-See the [Building a Native Executable guide](https://quarkus.io/guides/building-native-image-guide)
-for help setting up your environment.
+환경 설정에 대한 자세한 내용은 [네이티브 실행 파일 빌드 가이드](https://quarkus.io/guides/building-native-image-guide)를 참고하세요.
 
-## Building the application
+## 애플리케이션 빌드하기
 
-Launch the Maven build on the checked out sources of this demo:
+이 데모의 소스를 체크아웃한 후 Maven 빌드를 실행하세요:
 
 > ./mvnw package
 
-### Live coding with Quarkus
+### Quarkus 라이브 코딩
 
-The Maven Quarkus plugin provides a development mode that supports
-live coding. To try this out:
+Maven Quarkus 플러그인은 라이브 코딩을 지원하는 개발 모드를 제공합니다. 사용 방법:
 
 > ./mvnw quarkus:dev
 
-This command will leave Quarkus running in the foreground listening on port 8080.
+이 명령어를 실행하면 Quarkus가 포그라운드에서 8080 포트로 실행됩니다.
 
-1. Visit the default endpoint: [http://127.0.0.1:8080](http://127.0.0.1:8080).
-    - Make a simple change to [src/main/resources/META-INF/resources/index.html](src/main/resources/META-INF/resources/index.html) file.
-    - Refresh the browser to see the updated page.
-2. Visit the `/hello` endpoint: [http://127.0.0.1:8080/hello](http://127.0.0.1:8080/hello)
-    - Update the response in [src/main/java/org/acme/quickstart/GreetingResource.java](src/main/java/org/acme/quickstart/GreetingResource.java). Replace `hello` with `hello there` in the `hello()` method.
-    - Refresh the browser. You should now see `hello there`.
-    - Undo the change, so the method returns `hello` again.
-    - Refresh the browser. You should now see `hello`.
+1. 기본 엔드포인트 방문: [http://127.0.0.1:8080](http://127.0.0.1:8080)
+    - [src/main/resources/META-INF/resources/index.html](src/main/resources/META-INF/resources/index.html) 파일을 간단히 수정해보세요.
+    - 브라우저를 새로고침하면 변경된 페이지를 볼 수 있습니다.
+2. `/hello` 엔드포인트 방문: [http://127.0.0.1:8080/hello](http://127.0.0.1:8080/hello)
+    - [src/main/java/org/acme/quickstart/GreetingResource.java](src/main/java/org/acme/quickstart/GreetingResource.java) 파일에서 `hello()` 메서드의 반환값을 `hello`에서 `hello there`로 변경하세요.
+    - 브라우저를 새로고침하면 `hello there`가 표시됩니다.
+    - 변경을 되돌려 다시 `hello`를 반환하도록 하세요.
+    - 브라우저를 새로고침하면 다시 `hello`가 표시됩니다.
 
-### Run Quarkus in JVM mode
+### Quarkus를 JVM 모드로 실행하기
 
-When you're done iterating in developer mode, you can run the application as a
-conventional jar file.
+개발 모드에서 작업을 마쳤다면, 애플리케이션을 일반 jar 파일로 실행할 수 있습니다.
 
-First compile it:
+먼저 컴파일하세요:
 
 > ./mvnw package
 
-Then run it:
+그런 다음 실행하세요:
 
 > java -jar ./target/quarkus-app/quarkus-run.jar
 
-Have a look at how fast it boots, or measure the total native memory consumption.
+Quarkus의 빠른 부팅 속도나 네이티브 메모리 사용량을 확인해보세요.
 
-### Run Quarkus as a native executable
+### Quarkus를 네이티브 실행 파일로 실행하기
 
-You can also create a native executable from this application without making any
-source code changes. A native executable removes the dependency on the JVM:
-everything needed to run the application on the target platform is included in
-the executable, allowing the application to run with minimal resource overhead.
+소스 코드를 변경하지 않고도 이 애플리케이션을 네이티브 실행 파일로 만들 수 있습니다. 네이티브 실행 파일은 JVM에 대한 의존성을 제거합니다:
+실행에 필요한 모든 것이 실행 파일에 포함되어 있어, 최소한의 리소스로 애플리케이션을 실행할 수 있습니다.
 
-Compiling a native executable takes a bit longer, as GraalVM performs additional
-steps to remove unnecessary codepaths. Use the  `native` profile to compile a
-native executable:
+네이티브 실행 파일 컴파일은 GraalVM이 불필요한 코드 경로를 제거하는 추가 작업을 수행하므로 시간이 더 걸릴 수 있습니다. `native` 프로파일을 사용해 네이티브 실행 파일을 빌드하세요:
 
 > ./mvnw package -Dnative
 
-After getting a cup of coffee, you'll be able to run this executable directly:
+잠시 기다리면, 다음과 같이 실행 파일을 직접 실행할 수 있습니다:
 
 > ./target/getting-started-1.0.0-SNAPSHOT-runner
