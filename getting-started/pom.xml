@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    이 파일은 Maven 프로젝트의 설정 파일(pom.xml)입니다.
+    Quarkus 기반의 Java 프로젝트로, 의존성, 빌드, 플러그인, 프로파일 등을 정의합니다.
+-->
 <project>
+    <!-- Maven 모델 버전 -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- 그룹 ID: 프로젝트의 조직 또는 회사 식별자 -->
     <groupId>org.acme</groupId>
+    <!-- 아티팩트 ID: 프로젝트의 이름(빌드 결과물 이름) -->
     <artifactId>getting-started</artifactId>
+    <!-- 버전: 현재 프로젝트의 버전 -->
     <version>1.0.0-SNAPSHOT</version>
 
+    <!--
+        properties: Maven 및 Quarkus 빌드에 사용되는 다양한 속성 정의
+        - Java 버전, Quarkus 플랫폼 정보, 플러그인 버전 등
+    -->
     <properties>
+        <!-- Quarkus BOM(의존성 버전 관리용) 아티팩트 ID -->
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <!-- Quarkus BOM 그룹 ID -->
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <!-- Quarkus 플랫폼 버전 -->
         <quarkus.platform.version>3.22.3</quarkus.platform.version>
+        <!-- Maven 컴파일러 플러그인 버전 -->
         <compiler-plugin.version>3.11.0</compiler-plugin.version>
+        <!-- Maven Surefire(테스트) 플러그인 버전 -->
         <surefire-plugin.version>3.1.2</surefire-plugin.version>
+        <!-- 소스 파일 인코딩 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Java 소스 버전 -->
         <maven.compiler.source>17</maven.compiler.source>
+        <!-- Java 타겟(컴파일 결과) 버전 -->
         <maven.compiler.target>17</maven.compiler.target>
+        <!-- 컴파일 시 파라미터 정보 포함 여부 -->
         <maven.compiler.parameters>true</maven.compiler.parameters>
     </properties>
 
+    <!--
+        dependencyManagement: 의존성 버전 관리를 위한 BOM(Bill of Materials) 설정
+        하위 모듈이나 의존성에서 버전 명시 없이 사용할 수 있도록 함
+    -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -30,16 +55,22 @@
         </dependencies>
     </dependencyManagement>
 
+    <!--
+        dependencies: 프로젝트에서 사용하는 외부 라이브러리 및 프레임워크 정의
+    -->
     <dependencies>
+        <!-- Quarkus RESTful API 구현을 위한 의존성 -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest</artifactId>
         </dependency>
+        <!-- Quarkus 테스트(JUnit5) 지원 의존성 -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- REST API 테스트를 위한 Rest-Assured 의존성 -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -47,22 +78,30 @@
         </dependency>
     </dependencies>
 
+    <!--
+        build: 빌드 시 사용되는 플러그인 및 설정 정의
+    -->
     <build>
         <plugins>
+            <!-- Java 소스 코드 컴파일을 위한 플러그인 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler-plugin.version}</version>
             </plugin>
+            <!-- 단위 테스트 실행을 위한 플러그인 -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
                 <configuration>
                     <systemPropertyVariables>
+                        <!-- Quarkus 로깅 매니저 설정 -->
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <!-- Maven 홈 디렉토리 경로 -->
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            <!-- Quarkus 애플리케이션 빌드를 위한 플러그인 -->
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
@@ -70,6 +109,7 @@
                 <executions>
                     <execution>
                         <goals>
+                            <!-- Quarkus 빌드 목표 -->
                             <goal>build</goal>
                         </goals>
                     </execution>
@@ -78,34 +118,45 @@
         </plugins>
     </build>
 
-
+    <!--
+        profiles: 특정 조건(예: 네이티브 빌드)에서만 적용되는 설정 정의
+    -->
     <profiles>
+        <!-- 네이티브 이미지를 빌드할 때 활성화되는 프로파일 -->
         <profile>
             <id>native</id>
             <activation>
                 <property>
+                    <!-- native 프로퍼티가 지정되면 활성화 -->
                     <name>native</name>
                 </property>
             </activation>
             <properties>
+                <!-- Quarkus 네이티브 빌드 활성화 -->
                 <quarkus.native.enabled>true</quarkus.native.enabled>
+                <!-- jar 패키징 비활성화 -->
                 <quarkus.package.jar.enabled>false</quarkus.package.jar.enabled>
             </properties>
             <build>
                 <plugins>
+                    <!-- 통합 테스트 실행을 위한 Failsafe 플러그인 -->
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${surefire-plugin.version}</version>
                         <executions>
                             <execution>
                                 <goals>
+                                    <!-- 통합 테스트 및 검증 목표 -->
                                     <goal>integration-test</goal>
                                     <goal>verify</goal>
                                 </goals>
                                 <configuration>
                                     <systemPropertyVariables>
+                                        <!-- 네이티브 이미지 경로 설정 -->
                                         <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                        <!-- Quarkus 로깅 매니저 설정 -->
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                        <!-- Maven 홈 디렉토리 경로 -->
                                         <maven.home>${maven.home}</maven.home>
                                     </systemPropertyVariables>
                                 </configuration>
